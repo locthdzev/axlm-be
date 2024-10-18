@@ -1,0 +1,9 @@
+.vscode/
+
+# Thư mục build
+bin/
+obj/
+
+# Tệp tạm thời
+*.log
+*.tmp
