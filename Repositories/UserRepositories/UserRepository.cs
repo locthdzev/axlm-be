@@ -69,17 +69,17 @@ namespace Repositories.UserRepositories
 
             if (reqModel.gender != null)
             {
-                allUser = allUser.Where(user => user.Gender.Equals(reqModel.gender, StringComparison.OrdinalIgnoreCase));
+                allUser = allUser.Where(user => user.Gender.ToLower() == reqModel.gender.ToLower());
             }
 
             if (reqModel.role != null)
             {
-                allUser = allUser.Where(user => user.Role.Equals(reqModel.role, StringComparison.OrdinalIgnoreCase));
+                allUser = allUser.Where(user => user.Role.ToLower() == reqModel.role.ToLower());
             }
 
             if (reqModel.status != null)
             {
-                allUser = allUser.Where(user => user.Status.Equals(reqModel.status, StringComparison.OrdinalIgnoreCase));
+                allUser = allUser.Where(user => user.Status.ToLower() == reqModel.status.ToLower());
             }
 
             return allUser;

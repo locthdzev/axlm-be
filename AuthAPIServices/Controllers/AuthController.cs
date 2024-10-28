@@ -32,7 +32,7 @@ namespace AuthAPIServices.Controllers
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordReqModel changePasswordModel)
         {
-            var userIdString = User.FindFirst("UserId")?.Value;
+            var userIdString = User.FindFirst("userid")?.Value;
 
             if (string.IsNullOrEmpty(userIdString))
             {

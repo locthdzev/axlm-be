@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "1.0",
-        Title = "User API Service",
+        Title = "Auth API Service",
         Description = "API documentation for the AcademiX Learning Management System",
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -87,7 +87,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "User API Service V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
         c.RoutePrefix = string.Empty;
     });
 }

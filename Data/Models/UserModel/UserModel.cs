@@ -1,5 +1,6 @@
 namespace Data.Models.UserModel
 {
+    //use
     public class UserResModel
     {
         public Guid Id { get; set; }
@@ -107,6 +108,7 @@ namespace Data.Models.UserModel
         public string Password { get; set; }
     }
 
+//use
     public class UserCreateReqModel
     {
         public string FullName { get; set; } = null!;
@@ -139,6 +141,7 @@ namespace Data.Models.UserModel
         public string NewPassword { get; set; } = null!;
     }
 
+//use
     public class UpdateAccountsStatusModel
     {
         public List<Guid>? UserId { get; set; }

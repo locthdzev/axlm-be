@@ -15,10 +15,10 @@ namespace Data.Utilities.Email
             try
             {
                 var toEmail = Email;
-                string from = "locthce160433@fpt.edu.vn";
-                string pass = "dlip jlxm bdmq eemg";
-                // string from = "fresheracademy.ms@gmail.com";
-                // string pass = "wgov rkcz gyfm uleu";
+                // string from = "locthce160433@fpt.edu.vn";
+                // string pass = "dlip jlxm bdmq eemg";
+                string from = "fresheracademy.ms@gmail.com";
+                string pass = "wgov rkcz gyfm uleu";
                 MimeMessage message = new();
                 message.From.Add(MailboxAddress.Parse(from));
                 message.Subject = "[AXLMS] " + Subject;
@@ -46,8 +46,8 @@ namespace Data.Utilities.Email
             {
                 //string from = "esmsweb@gmail.com";
                 //string pass = "pzsz yhqj zcem dacg";
-                string from = "locthce160433@fpt.edu.vn";
-                string pass = "dlip jlxm bdmq eemg";
+                string from = "fresheracademy.ms@gmail.com";
+                string pass = "wgov rkcz gyfm uleu";
                 using MailKit.Net.Smtp.SmtpClient smtp = new();
                 await smtp.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
                 await smtp.AuthenticateAsync(from, pass);

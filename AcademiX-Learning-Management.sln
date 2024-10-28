@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthAPIServices", "AuthAPIS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtpAPIServices", "OtpAPIServices\OtpAPIServices.csproj", "{7E1A7F3E-4149-4951-9401-D409D286589C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerifyAPIServices", "VerifyAPIServices\VerifyAPIServices.csproj", "{7C3D5AF7-C727-4638-B592-B5540FF2B21F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{A881DC09-45C2-4047-9555-1042C30A0618}"
 EndProject
 Global

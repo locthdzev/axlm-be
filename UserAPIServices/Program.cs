@@ -69,6 +69,7 @@ builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(build
 // Subscribe Services and Repositories
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IEmail, Email>();
+
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 // Add CORS
@@ -91,7 +92,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "User API Service V1");
         c.RoutePrefix = string.Empty;
     });
 }
