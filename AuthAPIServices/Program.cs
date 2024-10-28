@@ -1,13 +1,11 @@
-using System.Text;
+using AuthAPIServices.Services;
 using Data.Entities;
-using Data.Utilities.Email;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Repositories.UserRepositories;
-using UserAPIServices.Middlewares;
-using UserAPIServices.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -63,24 +61,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-//Connect Database
+// Connect Database
 builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Subscribe Services and Repositories
-builder.Services.AddScoped<IUserServices, UserServices>();
-builder.Services.AddScoped<IEmail, Email>();
+builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 // Add CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-        });
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
 });
 
 var app = builder.Build();
@@ -91,7 +87,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "User API Service V1");
         c.RoutePrefix = string.Empty;
     });
 }
@@ -100,7 +96,6 @@ app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<AuthorizeMiddleware>();
 app.MapControllers();
 
 app.Run();
