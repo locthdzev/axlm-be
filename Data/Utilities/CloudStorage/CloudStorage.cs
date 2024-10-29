@@ -11,7 +11,17 @@ namespace Data.Utilities.CloudStorage
 
         public CloudStorage(CloudStorageSettings settings)
         {
-            GoogleCredential credential = GoogleCredential.FromFile(settings.ServiceAccountKeyPath);
+            var basePath = Directory.GetCurrentDirectory();
+            var relativePath = settings.ServiceAccountKeyPath;
+
+            var fullPath = Path.GetFullPath(Path.Combine(basePath, "..", relativePath));
+
+            if (!File.Exists(fullPath))
+            {
+                throw new FileNotFoundException($"Service account key file not found at {fullPath}");
+            }
+
+            GoogleCredential credential = GoogleCredential.FromFile(fullPath);
             _storage = StorageClient.Create(credential);
             _bucketName = settings.BucketName;
         }

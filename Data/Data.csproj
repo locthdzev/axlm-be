@@ -35,6 +35,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+    <ItemGroup>
+    <None Update="axlm-2024-firebase.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="TemplateEmail\" />
   </ItemGroup>
