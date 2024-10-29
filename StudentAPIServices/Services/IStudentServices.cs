@@ -1,6 +1,7 @@
 using Data.Models.FilterModel;
 using Data.Models.ResultModel;
-using Data.Models.StudentModel;
+using Data.Models.SubmissionModel;
+using Data.Models.UserModel;
 
 namespace StudentAPIServices.Services
 {

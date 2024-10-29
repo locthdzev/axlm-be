@@ -1,7 +1,9 @@
 using Data.Entities;
 using Data.Enums;
+using Data.Models.ClassModel;
 using Data.Models.FilterModel;
-using Data.Models.StudentClassModel;
+using Data.Models.SubmissionModel;
+using Data.Models.UserModel;
 using Microsoft.EntityFrameworkCore;
 using Repositories.GenericRepositories;
 using static Data.Enums.Status;

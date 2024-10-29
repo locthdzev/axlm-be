@@ -1,4 +1,4 @@
-using Data.Models.EmailModel;
+using Data.Models.UserModel;
 
 namespace Data.Utilities.Email
 {
