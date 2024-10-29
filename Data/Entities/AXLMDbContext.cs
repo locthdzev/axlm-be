@@ -7,6 +7,9 @@ namespace Data.Entities
     {
         public AXLMDbContext() { }
 
+        public AXLMDbContext(DbContextOptions<AXLMDbContext> options)
+        : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder()

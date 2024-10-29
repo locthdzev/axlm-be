@@ -1,4 +1,4 @@
-namespace Data.GenericRepositories
+namespace Repositories.GenericRepositories
 {
     public interface IRepository<T> where T : class
     {

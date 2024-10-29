@@ -1,7 +1,7 @@
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.GenericRepositories
+namespace Repositories.GenericRepositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
