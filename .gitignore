@@ -7,3 +7,5 @@ obj/
 # Tệp tạm thời
 *.log
 *.tmp
+
+Data/axlm-2024-firebase.json
