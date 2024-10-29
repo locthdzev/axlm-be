@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassAPIServices", "ClassAP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttendanceAPIServices", "AttendanceAPIServices\AttendanceAPIServices.csproj", "{6A2FB442-8C3E-4F35-80B7-D8F5FFEDC7D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertificateAPIServices", "CertificateAPIServices\CertificateAPIServices.csproj", "{20F32B96-B1CC-4513-99FA-B849C2CF9241}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{6A2FB442-8C3E-4F35-80B7-D8F5FFEDC7D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A2FB442-8C3E-4F35-80B7-D8F5FFEDC7D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A2FB442-8C3E-4F35-80B7-D8F5FFEDC7D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20F32B96-B1CC-4513-99FA-B849C2CF9241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20F32B96-B1CC-4513-99FA-B849C2CF9241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20F32B96-B1CC-4513-99FA-B849C2CF9241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20F32B96-B1CC-4513-99FA-B849C2CF9241}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
