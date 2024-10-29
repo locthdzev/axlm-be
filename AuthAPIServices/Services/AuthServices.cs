@@ -4,7 +4,7 @@ using Data.Models.ResultModel;
 using static Data.Enums.Status;
 using Encoder = Data.Utilities.Encoder.Encoder;
 using Repositories.UserRepositories;
-using Data.Models.AuthModel;
+using Data.Models.UserModel;
 
 namespace AuthAPIServices.Services
 {

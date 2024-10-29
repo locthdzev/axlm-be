@@ -1,5 +1,5 @@
-using Data.Models.AuthModel;
 using Data.Models.ResultModel;
+using Data.Models.UserModel;
 
 namespace AuthAPIServices.Services
 {

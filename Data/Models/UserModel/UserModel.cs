@@ -1,6 +1,83 @@
+using Data.Models.ClassModel;
+
 namespace Data.Models.UserModel
 {
-    //use
+    public class StudentCreateReqModel
+    {
+        public string FullName { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
+        public string? Password { get; set; } = null!;
+
+        public DateTime Dob { get; set; }
+
+        public string Address { get; set; } = null!;
+
+        public string Gender { get; set; } = null!;
+
+        public string Phone { get; set; } = null!;
+    }
+
+    public class StudentUpdateResModel
+    {
+        public DateTime Dob { get; set; }
+        public string Address { get; set; }
+        public string Gender { get; set; }
+        public string Phone { get; set; }
+        public string Status { get; set; } = null!;
+    }
+
+    public class StudentUpdateStatusResModel
+    {
+        public Guid Id { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class UserLoginReqModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class UserCreateReqModel
+    {
+        public string FullName { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
+        public string? Password { get; set; } = null!;
+
+        public DateTime Dob { get; set; }
+
+        public string Address { get; set; } = null!;
+
+        public string Gender { get; set; } = null!;
+
+        public string Role { get; set; } = null!;
+
+        public string Phone { get; set; } = null!;
+    }
+
+    public class UserResetPasswordReqModel
+    {
+        public string Email { get; set; } = null!;
+
+        public string Password { get; set; } = null!;
+    }
+
+    public class ChangePasswordReqModel
+    {
+        public string OldPassword { get; set; } = null!;
+        public string NewPassword { get; set; } = null!;
+    }
+
+    public class UpdateAccountsStatusModel
+    {
+        public List<Guid>? UserId { get; set; }
+        public string status { get; set; } = null!;
+    }
+
     public class UserResModel
     {
         public Guid Id { get; set; }
@@ -61,130 +138,5 @@ namespace Data.Models.UserModel
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Role { get; set; }
-    }
-
-    public class ClassInformationOfStudent
-    {
-        public ClassInformationOfOthers ClassInformationOfOthers { get; set; } = null!;
-
-        public AdminOfCLass AdminOfCLass { get; set; } = null!;
-    }
-
-    public class AdminOfCLass
-    {
-        public Guid Id { get; set; }
-
-        public string Name { get; set; } = null!;
-    }
-
-    public class ClassInformationOfOthers
-    {
-        public Guid ClassId { get; set; }
-
-        public string ClassName { get; set; } = null!;
-
-        public Guid ProgramId { get; set; }
-
-        public string Program { get; set; } = null!;
-
-        public DateTime? StartAt { get; set; } = null!;
-
-        public DateTime? EndAt { get; set; } = null!;
-
-        public string Location { get; set; } = null!;
-
-        public Guid? TrainerId { get; set; }
-
-        public string? Trainer { get; set; }
-
-        public Guid? AdminId { get; set; }
-
-        public string? Admin { get; set; }
-    }
-
-    public class UserLoginReqModel
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-
-//use
-    public class UserCreateReqModel
-    {
-        public string FullName { get; set; } = null!;
-
-        public string Email { get; set; } = null!;
-
-        public string? Password { get; set; } = null!;
-
-        public DateTime Dob { get; set; }
-
-        public string Address { get; set; } = null!;
-
-        public string Gender { get; set; } = null!;
-
-        public string Role { get; set; } = null!;
-
-        public string Phone { get; set; } = null!;
-    }
-
-    public class UserResetPasswordReqModel
-    {
-        public string Email { get; set; } = null!;
-
-        public string Password { get; set; } = null!;
-    }
-
-    public class ChangePasswordReqModel
-    {
-        public string OldPassword { get; set; } = null!;
-        public string NewPassword { get; set; } = null!;
-    }
-
-//use
-    public class UpdateAccountsStatusModel
-    {
-        public List<Guid>? UserId { get; set; }
-        public string status { get; set; } = null!;
-    }
-
-    public class StudentCreateReqModel
-    {
-        public string FullName { get; set; } = null!;
-
-        public string Email { get; set; } = null!;
-
-        public string? Password { get; set; } = null!;
-
-        public DateTime Dob { get; set; }
-
-        public string Address { get; set; } = null!;
-
-        public string Gender { get; set; } = null!;
-
-        public string Phone { get; set; } = null!;
-    }
-
-    public class StudentUpdateResModel
-    {
-        public DateTime Dob { get; set; }
-        public string Address { get; set; }
-        public string Gender { get; set; }
-        public string Phone { get; set; }
-        public string Status { get; set; } = null!;
-
-    }
-
-    public class StudentUpdateStatusResModel
-    {
-        public Guid Id { get; set; }
-        public string Status { get; set; }
-    }
-
-    public class SenderEmailModel
-    {
-        public Guid Id { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
     }
 }

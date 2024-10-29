@@ -1,6 +1,8 @@
 using Data.Entities;
+using Data.Models.ClassModel;
 using Data.Models.FilterModel;
-using Data.Models.StudentClassModel;
+using Data.Models.SubmissionModel;
+using Data.Models.UserModel;
 using Repositories.GenericRepositories;
 
 namespace Repositories.StudentClassRepositories

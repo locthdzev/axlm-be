@@ -2,6 +2,7 @@ using Data.Entities;
 using Data.Models.FilterModel;
 using Repositories.GenericRepositories;
 using Data.Models.UserModel;
+using Data.Models.EmailModel;
 
 namespace Repositories.UserRepositories
 {

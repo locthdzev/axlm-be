@@ -1,5 +1,5 @@
 using AuthAPIServices.Services;
-using Data.Models.AuthModel;
+using Data.Models.UserModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthAPIServices.Controllers

@@ -1,5 +1,7 @@
 using Data.Entities;
 using Data.Models.ClassModel;
+using Data.Models.ModuleModel;
+using Data.Models.TrainingProgramModel;
 using Microsoft.EntityFrameworkCore;
 using Repositories.GenericRepositories;
 using static Data.Enums.Status;

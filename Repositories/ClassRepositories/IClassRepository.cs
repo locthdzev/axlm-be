@@ -1,5 +1,7 @@
 using Data.Entities;
 using Data.Models.ClassModel;
+using Data.Models.ModuleModel;
+using Data.Models.TrainingProgramModel;
 using Repositories.GenericRepositories;
 
 namespace Repositories.ClassRepositories

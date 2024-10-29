@@ -1,5 +1,6 @@
 using Data.Entities;
 using Data.Enums;
+using Data.Models.EmailModel;
 using Data.Models.FilterModel;
 using Data.Models.UserModel;
 using Microsoft.EntityFrameworkCore;

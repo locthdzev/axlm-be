@@ -1,7 +1,8 @@
 using System.Globalization;
 using ClosedXML.Excel;
 using Data.Models.FilterModel;
-using Data.Models.StudentModel;
+using Data.Models.SubmissionModel;
+using Data.Models.UserModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.StudentRepositories;

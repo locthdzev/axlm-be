@@ -1,4 +1,4 @@
-using Data.Models.EmailModel;
+using Data.Models.UserModel;
 using MailKit.Security;
 using MimeKit;
 using PusherServer;
