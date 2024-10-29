@@ -6,6 +6,7 @@ using Data.Utilities.CloudStorage;
 using Data.Utilities.Excel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Repositories.AssignmDetailsRepositories;
@@ -73,7 +74,13 @@ builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(build
 // Subscribe Services and Repositories
 builder.Services.AddScoped<IAssignmentServices, AssignmentServices>();
 builder.Services.AddScoped<IExcel, Excel>();
-builder.Services.AddScoped<ICloudStorage, CloudStorage>();
+// Cấu hình DI cho CloudStorageSettings và CloudStorage
+builder.Services.Configure<CloudStorageSettings>(builder.Configuration.GetSection("CloudStorageSettings"));
+builder.Services.AddScoped<ICloudStorage>(provider =>
+{
+    var settings = provider.GetRequiredService<IOptions<CloudStorageSettings>>().Value;
+    return new CloudStorage(settings);
+});
 
 builder.Services.AddTransient<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddTransient<IAssignmDetailsRepository, AssignmDetailsRepository>();

@@ -7,14 +7,15 @@ namespace Data.Utilities.CloudStorage
     public class CloudStorage : ICloudStorage
     {
         private readonly StorageClient _storage;
-        private string bucketName = "fams-69dd8.appspot.com";
+        private readonly string _bucketName;
 
-        public CloudStorage(string serviceAccountKeyPath)
+        public CloudStorage(CloudStorageSettings settings)
         {
-            GoogleCredential credential = GoogleCredential.FromFile(serviceAccountKeyPath);
+            GoogleCredential credential = GoogleCredential.FromFile(settings.ServiceAccountKeyPath);
             _storage = StorageClient.Create(credential);
+            _bucketName = settings.BucketName;
         }
-        
+
         public async Task<List<string>> UploadFilesToFirebase(List<IFormFile> files, string filePath)
         {
             List<string> uploadedFileNames = new List<string>();
@@ -26,7 +27,7 @@ namespace Data.Utilities.CloudStorage
                     await file.CopyToAsync(memoryStream);
                     memoryStream.Seek(0, SeekOrigin.Begin);
                     var objectName = $"{filePath}/{file.FileName}";
-                    _storage.UploadObject(bucketName, objectName, file.ContentType, memoryStream);
+                    _storage.UploadObject(_bucketName, objectName, file.ContentType, memoryStream);
 
                     uploadedFileNames.Add(file.FileName);
                 }
@@ -46,7 +47,7 @@ namespace Data.Utilities.CloudStorage
                     await file.CopyToAsync(memoryStream);
                     memoryStream.Seek(0, SeekOrigin.Begin);
                     var objectName = $"{filePath}/{file.FileName}";
-                    _storage.UploadObject(bucketName, objectName, file.ContentType, memoryStream);
+                    _storage.UploadObject(_bucketName, objectName, file.ContentType, memoryStream);
 
                     uploadedFileName = file.FileName;
                 }
@@ -61,7 +62,7 @@ namespace Data.Utilities.CloudStorage
 
                 string objectName = $"{filePath}/{fileName}";
 
-                await _storage.DownloadObjectAsync(bucketName, objectName, memoryStream);
+                await _storage.DownloadObjectAsync(_bucketName, objectName, memoryStream);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
                 byte[] fileBytes = memoryStream.ToArray();
@@ -75,7 +76,7 @@ namespace Data.Utilities.CloudStorage
         {
             string prefix = $"class_{classId}/";
 
-            var objects = _storage.ListObjects(bucketName, null);
+            var objects = _storage.ListObjects(_bucketName, null);
 
             foreach (var obj in objects)
             {
@@ -88,7 +89,7 @@ namespace Data.Utilities.CloudStorage
             try
             {
                 string objectName = $"{filePath}/{fileName}";
-                await _storage.DeleteObjectAsync(bucketName, objectName);
+                await _storage.DeleteObjectAsync(_bucketName, objectName);
                 Console.WriteLine($"File '{fileName}' removed successfully from Firebase Storage.");
             }
             catch (Exception ex)
