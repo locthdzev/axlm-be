@@ -1,13 +1,17 @@
 using System.Text;
+using AssignmentAPIServices.Middlewares;
+using AssignmentAPIServices.Services;
 using Data.Entities;
-using Data.Utilities.Email;
+using Data.Utilities.CloudStorage;
+using Data.Utilities.Excel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Repositories.AssignmDetailsRepositories;
+using Repositories.AssignmentRepositories;
+using Repositories.SubmissionRepositories;
 using Repositories.UserRepositories;
-using UserAPIServices.Middlewares;
-using UserAPIServices.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -22,7 +26,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "1.0",
-        Title = "User API Service",
+        Title = "Assignment API Service",
         Description = "API documentation for the AcademiX Learning Management System",
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -67,9 +71,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Subscribe Services and Repositories
-builder.Services.AddScoped<IUserServices, UserServices>();
-builder.Services.AddScoped<IEmail, Email>();
+builder.Services.AddScoped<IAssignmentServices, AssignmentServices>();
+builder.Services.AddScoped<IExcel, Excel>();
+builder.Services.AddScoped<ICloudStorage, CloudStorage>();
 
+builder.Services.AddTransient<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddTransient<IAssignmDetailsRepository, AssignmDetailsRepository>();
+builder.Services.AddTransient<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 // Add CORS
@@ -92,7 +100,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "User API Service V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Assignment API Service V1");
         c.RoutePrefix = string.Empty;
     });
 }

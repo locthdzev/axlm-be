@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Repositories.StudentClassRepositories;
+using Repositories.StudentRepositories;
+using Repositories.SubmissionRepositories;
 using Repositories.UserRepositories;
-using UserAPIServices.Middlewares;
-using UserAPIServices.Services;
+using StudentAPIServices.Middlewares;
+using StudentAPIServices.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -22,7 +25,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "1.0",
-        Title = "User API Service",
+        Title = "Student API Service",
         Description = "API documentation for the AcademiX Learning Management System",
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -67,9 +70,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Subscribe Services and Repositories
-builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IStudentServices, StudentServices>();
 builder.Services.AddScoped<IEmail, Email>();
 
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
+builder.Services.AddTransient<ISubmissionRepository, SubmissionRepository>();
+builder.Services.AddTransient<IStudentClassRepository, StudentClassRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 // Add CORS
@@ -92,7 +98,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "User API Service V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Student API Service V1");
         c.RoutePrefix = string.Empty;
     });
 }

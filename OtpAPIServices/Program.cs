@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OtpAPIServices.Services;
+using Repositories.OtpRepositories;
 using Repositories.UserRepositories;
-using UserAPIServices.Middlewares;
-using UserAPIServices.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "1.0",
-        Title = "User API Service",
+        Title = "OTP API Service",
         Description = "API documentation for the AcademiX Learning Management System",
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -63,25 +63,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-//Connect Database
+// Connect Database
 builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Subscribe Services and Repositories
-builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IVerifyServices, VerifyServices>();
 builder.Services.AddScoped<IEmail, Email>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IOtpRepository, OtpRepository>();
 
 // Add CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-        });
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
 });
 
 var app = builder.Build();
@@ -92,7 +92,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "User API Service V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTP API Service V1");
         c.RoutePrefix = string.Empty;
     });
 }
@@ -101,7 +101,6 @@ app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<AuthorizeMiddleware>();
 app.MapControllers();
 
 app.Run();
