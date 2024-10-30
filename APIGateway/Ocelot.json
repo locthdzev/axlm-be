@@ -1,0 +1,16 @@
+{
+    "Routes": [
+      {
+        "DownstreamPathTemplate": "/api/Auth/{everything}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "host.docker.internal",
+            "Port": 3000
+          }
+        ],
+        "UpstreamPathTemplate": "/APIGateway/Auth/{everything}",
+        "UpstreamHttpMethod": ["POST"]
+      }
+    ]
+  }

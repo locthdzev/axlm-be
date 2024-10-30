@@ -1,19 +1,19 @@
-using AuthAPIServices.Services;
-using Data.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Repositories.UserRepositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Data.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Repositories.ClassRepositories;
+using Repositories.ModuleProgramRepositories;
+using Repositories.ModuleRepositories;
+using Repositories.TrainingProgramRepositories;
+using Repositories.UserRepositories;
+using TrainingProgramAPIServices.Middlewares;
+using TrainingProgramAPIServices.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(80); // Lắng nghe tất cả địa chỉ IP
-});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "1.0",
-        Title = "Auth API Service",
+        Title = "Training Program API Service",
         Description = "API documentation for the AcademiX Learning Management System",
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -37,7 +37,6 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
-    
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -49,40 +48,35 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[] { }
+            new string[]{ }
         }
     });
 });
 
-// Check values of JWT settings
-if (string.IsNullOrEmpty(jwtSettings["Key"]) || 
-    string.IsNullOrEmpty(jwtSettings["Issuer"]) || 
-    string.IsNullOrEmpty(jwtSettings["Audience"]))
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    throw new ArgumentNullException("JWT settings are not configured correctly.");
-}
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
-            ValidateIssuer = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidateAudience = true,
-            ValidAudience = jwtSettings["Audience"]
-        };
-    });
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidateAudience = true,
+        ValidAudience = jwtSettings["Audience"]
+    };
+});
 
-// Connect Database
-builder.Services.AddDbContext<AXLMDbContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//Connect Database
+builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Subscribe Services and Repositories
-builder.Services.AddScoped<IAuthServices, AuthServices>();
+builder.Services.AddScoped<ITrainingProgramServices, TrainingProgramServices>();
+
+builder.Services.AddTransient<ITrainingProgramRepository, TrainingProgramRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IClassRepository, ClassRepository>();
+builder.Services.AddTransient<IModuleRepository, ModuleRepository>();
+builder.Services.AddTransient<IModuleProgramRepository, ModuleProgramRepository>();
 
 // Add CORS
 builder.Services.AddCors(options =>
@@ -99,18 +93,21 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
-    c.RoutePrefix = string.Empty;
-});
-
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Training Program API Service V1");
+        c.RoutePrefix = string.Empty;
+    });
+}
 
 app.UseCors("AllowAll");
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<AuthorizeMiddleware>();
 app.MapControllers();
 
 app.Run();
