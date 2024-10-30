@@ -102,7 +102,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Class API Service V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Module API Service V1");
         c.RoutePrefix = string.Empty;
     });
 }
