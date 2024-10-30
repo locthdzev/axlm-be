@@ -8,18 +8,21 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Lấy cài đặt JWT từ cấu hình
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
+// Cấu hình Kestrel để lắng nghe tất cả địa chỉ trên cổng 80
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(80); //Lắng nghe tất cả địa chỉ
+    serverOptions.ListenAnyIP(80); // Lắng nghe tất cả địa chỉ IP
 });
 
-// Add services to the container.
+// Thêm các dịch vụ cần thiết cho ứng dụng
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Set up Swagger
+// Thiết lập Swagger để tài liệu API
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -28,6 +31,8 @@ builder.Services.AddSwaggerGen(c =>
         Title = "Auth API Service",
         Description = "API documentation for the AcademiX Learning Management System",
     });
+    
+    // Cấu hình bảo mật cho Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -37,6 +42,7 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
+    
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -48,32 +54,43 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[]{ }
+            new string[] { }
         }
     });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+// Kiểm tra giá trị JWT
+if (string.IsNullOrEmpty(jwtSettings["Key"]) || 
+    string.IsNullOrEmpty(jwtSettings["Issuer"]) || 
+    string.IsNullOrEmpty(jwtSettings["Audience"]))
 {
-    options.TokenValidationParameters = new TokenValidationParameters
+    throw new ArgumentNullException("JWT settings are not configured correctly.");
+}
+
+// Cấu hình xác thực JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
-        ValidateIssuer = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidateAudience = true,
-        ValidAudience = jwtSettings["Audience"]
-    };
-});
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidateAudience = true,
+            ValidAudience = jwtSettings["Audience"]
+        };
+    });
 
-// Connect Database
-builder.Services.AddDbContext<AXLMDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Kết nối tới cơ sở dữ liệu
+builder.Services.AddDbContext<AXLMDbContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Subscribe Services and Repositories
+// Đăng ký các dịch vụ và repository
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
-// Add CORS
+// Thêm CORS để cho phép mọi nguồn
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
@@ -86,21 +103,19 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Cấu hình pipeline HTTP
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
-        c.RoutePrefix = string.Empty;
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
+    c.RoutePrefix = string.Empty; // Đặt Swagger UI ở trang gốc
+});
 
-app.UseCors("AllowAll");
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
 
-app.Run();
+app.UseCors("AllowAll"); // Áp dụng chính sách CORS
+//app.UseHttpsRedirection(); // Chuyển hướng HTTP sang HTTPS
+app.UseAuthentication(); // Xác thực người dùng
+app.UseAuthorization(); // Ủy quyền người dùng
+app.MapControllers(); // Đăng ký các controller
+
+app.Run(); // Chạy ứng dụng
