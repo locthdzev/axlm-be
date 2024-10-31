@@ -49,13 +49,13 @@ namespace UserAPIServices.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        // [Authorize(Roles = "SUAdmin, Admin")]
-        // [HttpGet("users/{id}")]
-        // public async Task<IActionResult> GetAccountsInfo(Guid id)
-        // {
-        //     var res = await _userServices.ViewAccountsInfo(id);
-        //     return res.IsSuccess ? Ok(res) : BadRequest(res);
-        // }
+        [Authorize(Roles = "SUAdmin, Admin")]
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetAccountsInfo(Guid id)
+        {
+            var res = await _userServices.ViewAccountsInfo(id);
+            return res.IsSuccess ? Ok(res) : BadRequest(res);
+        }
 
         [Authorize(Roles = "SUAdmin")]
         [HttpPut("users/status")]
@@ -65,12 +65,12 @@ namespace UserAPIServices.Controllers
             return res.IsSuccess ? Ok(res) : BadRequest(res);
         }
 
-        // [Authorize(Roles = "SUAdmin, Admin")]
-        // [HttpGet("users/trainers")]
-        // public async Task<IActionResult> GetTrainerList(int page)
-        // {
-        //     var res = await _userServices.GetTrainerList(page);
-        //     return res.IsSuccess ? Ok(res) : BadRequest(res);
-        // }
+        [Authorize(Roles = "SUAdmin, Admin")]
+        [HttpGet("users/trainers")]
+        public async Task<IActionResult> GetTrainerList(int page)
+        {
+            var res = await _userServices.GetTrainerList(page);
+            return res.IsSuccess ? Ok(res) : BadRequest(res);
+        }
     }
 }
