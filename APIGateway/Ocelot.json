@@ -5,80 +5,80 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9000
+          "Host": "localhost",
+          "Port": 5099
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/auth/{everything}",
-      "UpstreamHttpMethod": ["POST"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/assignment-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9001
+          "Host": "localhost",
+          "Port": 5059
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/assignment-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/attendance-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9002
+          "Host": "localhost",
+          "Port": 5101
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/attendance-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "GET"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/certificate-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9003
+          "Host": "localhost",
+          "Port": 5177
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/certificate-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/class-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9004
+          "Host": "localhost",
+          "Port": 5020
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/class-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET"]
+      "UpstreamHttpMethod": ["POST", "PUT", "GET", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/email-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9005
+          "Host": "localhost",
+          "Port": 5003
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/email-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "GET"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/lecture-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9006
+          "Host": "localhost",
+          "Port": 5211
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/lecture-management/{everything}",
@@ -89,20 +89,20 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9007
+          "Host": "localhost",
+          "Port": 5246
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/module-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/notification-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9008
+          "Host": "localhost",
+          "Port": 5016
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/notification-management/{everything}",
@@ -113,32 +113,32 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9009
+          "Host": "localhost",
+          "Port": 5295
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/otp-management/{everything}",
-      "UpstreamHttpMethod": ["POST"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/student-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9010
+          "Host": "localhost",
+          "Port": 5062
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/student-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     },
     {
       "DownstreamPathTemplate": "/api/training-program-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9011
+          "Host": "localhost",
+          "Port": 5247
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/training-program-management/{everything}",
@@ -149,12 +149,12 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "academix-api.ddns.net",
-          "Port": 9012
+          "Host": "localhost",
+          "Port": 5174
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/user-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET"]
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
     }
   ]
 }

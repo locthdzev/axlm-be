@@ -526,8 +526,8 @@ namespace ClassAPIServices.Services
                 var classManage = await _classManagerRepository.GetClassManagerByClassId(classes.Id);
                 var classTrain = await _classTrainerRepository.GetClassTrainerByClassId(classes.Id);
 
-                var admin = await _userRepository.GetUserById(classManage.UserId);
-                var trainer = await _userRepository.GetUserById(classTrain.UserId);
+                var admin = await _userRepository.Get(classManage.UserId);
+                var trainer = await _userRepository.Get(classTrain.UserId);
 
                 if (admin != null)
                 {
