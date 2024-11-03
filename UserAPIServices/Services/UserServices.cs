@@ -10,26 +10,26 @@ using Encoder = Data.Utilities.Encoder.Encoder;
 using static Data.Enums.Status;
 using Repositories.UserRepositories;
 using Data.Models.UserModel;
+using Data.Enums;
+using Repositories.StudentClassRepositories;
+using Repositories.AttendanceRepositories;
 
 namespace UserAPIServices.Services
 {
     public class UserServices : IUserServices
     {
         private readonly IUserRepository _userRepository;
-        // private readonly IStudentClassRepository _studentClassRepository;
-        // private readonly IAttendanceRepo _AttendanceRepo;
-        // private readonly ICertificateRepo _certificateRepository;
+        private readonly IStudentClassRepository _studentClassRepository;
+        private readonly IAttendanceRepository _attendanceRepository;
         private readonly IEmail _email;
 
-        public UserServices(IUserRepository userRepository, IEmail email)
+        public UserServices(IUserRepository userRepository, IStudentClassRepository studentClassRepository, IAttendanceRepository attendanceRepository, IEmail email)
         {
             _userRepository = userRepository;
-            // _studentClassRepository = studentClassRepository;
-            // _AttendanceRepo = AttendanceRepo;
-            // _certificateRepository = certificateRepository;
+            _studentClassRepository = studentClassRepository;
+            _attendanceRepository = attendanceRepository;
             _email = email;
         }
-
 
         public async Task<ResultModel> CreateAccount(UserCreateReqModel CreateForm)
         {
@@ -180,40 +180,40 @@ namespace UserAPIServices.Services
             }
         }
 
-        // public async Task<ResultModel> ViewAccountsInfo(Guid userId)
-        // {
-        //     ResultModel resultModel = new ResultModel();
-        //     try
-        //     {
-        //         var userInfo = await _userRepository.GetAccountInfo(userId);
-        //         if (userInfo.Role.Equals(Roles.STUDENT))
-        //         {
-        //             resultModel.Data = new StudentAccountInfoModel
-        //             {
-        //                 userResModel = userInfo,
-        //                 ClassInformationOfStudent = await _studentClassRepository.GetClassInfoByStudentId(userId)
-        //             };
-        //         }
-        //         else
-        //         {
-        //             resultModel.Data = new OtherAccountInfoModel
-        //             {
-        //                 userResModel = userInfo,
-        //                 classInformationOfOthers = await _studentClassRepository.GetClassInfoByOtherId(userId)
-        //             };
-        //         }
+        public async Task<ResultModel> ViewAccountsInfo(Guid userId)
+        {
+            ResultModel resultModel = new ResultModel();
+            try
+            {
+                var userInfo = await _userRepository.GetAccountInfo(userId);
+                if (userInfo.Role.Equals(Roles.STUDENT))
+                {
+                    resultModel.Data = new StudentAccountInfoModel
+                    {
+                        userResModel = userInfo,
+                        ClassInformationOfStudent = await _studentClassRepository.GetClassInfoByStudentId(userId)
+                    };
+                }
+                else
+                {
+                    resultModel.Data = new OtherAccountInfoModel
+                    {
+                        userResModel = userInfo,
+                        classInformationOfOthers = await _studentClassRepository.GetClassInfoByOtherId(userId)
+                    };
+                }
 
-        //         resultModel.IsSuccess = true;
-        //         resultModel.Code = (int)HttpStatusCode.OK;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         resultModel.IsSuccess = false;
-        //         resultModel.Code = (int)HttpStatusCode.BadRequest;
-        //         resultModel.Message = ex.Message;
-        //     }
-        //     return resultModel;
-        // }
+                resultModel.IsSuccess = true;
+                resultModel.Code = (int)HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                resultModel.IsSuccess = false;
+                resultModel.Code = (int)HttpStatusCode.BadRequest;
+                resultModel.Message = ex.Message;
+            }
+            return resultModel;
+        }
 
         public async Task<ResultModel> GetTrainerList(int page)
         {
@@ -237,24 +237,24 @@ namespace UserAPIServices.Services
         }
 
 
-        // public async Task<ResultModel> GetAttendanceById(Guid attendanceId)
-        // {
-        //     ResultModel resultModel = new ResultModel();
-        //     try
-        //     {
-        //         var attendance = await _AttendanceRepo.GetAttendanceById(attendanceId);
-        //         resultModel.Data = attendance;
-        //         resultModel.IsSuccess = true;
-        //         resultModel.Code = (int)HttpStatusCode.OK;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         resultModel.IsSuccess = false;
-        //         resultModel.Code = (int)HttpStatusCode.BadRequest;
-        //         resultModel.Message = ex.Message;
-        //     }
-        //     return resultModel;
-        // }
+        public async Task<ResultModel> GetAttendanceById(Guid attendanceId)
+        {
+            ResultModel resultModel = new ResultModel();
+            try
+            {
+                var attendance = await _attendanceRepository.GetAttendanceById(attendanceId);
+                resultModel.Data = attendance;
+                resultModel.IsSuccess = true;
+                resultModel.Code = (int)HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                resultModel.IsSuccess = false;
+                resultModel.Code = (int)HttpStatusCode.BadRequest;
+                resultModel.Message = ex.Message;
+            }
+            return resultModel;
+        }
 
         public async Task<ResultModel> UpdateAccountsStatus(UpdateAccountsStatusModel reqModel)
         {

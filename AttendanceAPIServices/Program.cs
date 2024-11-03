@@ -14,10 +14,10 @@ using Repositories.UserRepositories;
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(80); // Lắng nghe tất cả địa chỉ IP
-});
+// builder.WebHost.ConfigureKestrel(serverOptions =>
+// {
+//     serverOptions.ListenAnyIP(80); // Lắng nghe tất cả địa chỉ IP
+// });
 
 
 // Add services to the container.
@@ -100,7 +100,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Attendance API Service V1");
     c.RoutePrefix = string.Empty;
 });
 
