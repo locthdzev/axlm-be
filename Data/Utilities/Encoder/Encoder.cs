@@ -10,9 +10,8 @@ namespace Data.Utilities.Encoder
 {
     public class Encoder
     {
-        //private readonly JwtSecurityTokenHandler _tokenHandler; 
-        private static string Key = "TestingIssuerSigningKeyAXLMHAHAHAHA@123";
-        private static string Issuser = "TestingJWTIssuerSigningAXLMHAHAHAHA@123";
+        private static string Key = "R4nd0mK3yF0rJWT@2024#Secure!2024";
+        private static string Issuser = "MyUniqueIssuer@2024";
 
         public Encoder()
         {
