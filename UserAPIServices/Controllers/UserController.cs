@@ -17,7 +17,7 @@ namespace UserAPIServices.Controllers
             _userServices = userServices;
         }
 
-        [Authorize(Roles = "SUAdmin, Admin")]
+        [Authorize(Roles = "SUAdmin, Admin, Trainer, Student")]
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUser(int page, [FromQuery] FilterModel reqModel)
         {
@@ -49,7 +49,7 @@ namespace UserAPIServices.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize(Roles = "SUAdmin, Admin")]
+        [Authorize(Roles = "SUAdmin, Admin, Trainer, Student")]
         [HttpGet("users/{id}")]
         public async Task<IActionResult> GetAccountsInfo(Guid id)
         {

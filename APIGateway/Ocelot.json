@@ -1,160 +1,160 @@
 {
-  "Routes": [
-    {
-      "DownstreamPathTemplate": "/api/auth/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5099
-        }
-      ],
-      "UpstreamPathTemplate": "/APIGateway/auth/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
-    },
+  "ReRoutes": [
     {
       "DownstreamPathTemplate": "/api/assignment-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5059
+          "Host": "axlm-assignment-api",
+          "Port": 5001
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/assignment-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/attendance-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5101
+          "Host": "axlm-attendance-api",
+          "Port": 5002
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/attendance-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "axlm-auth-api",
+          "Port": 5003
+        }
+      ],
+      "UpstreamPathTemplate": "/APIGateway/auth/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/certificate-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5177
+          "Host": "axlm-certificate-api",
+          "Port": 5004
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/certificate-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/class-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5020
+          "Host": "axlm-class-api",
+          "Port": 5005
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/class-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/email-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "axlm-email-api",
+          "Port": 5006
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/email-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/lecture-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5211
+          "Host": "axlm-lecture-api",
+          "Port": 5007
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/lecture-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "DELETE", "GET"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/module-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5246
+          "Host": "axlm-module-api",
+          "Port": 5008
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/module-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/notification-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5016
+          "Host": "axlm-notification-api",
+          "Port": 5009
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/notification-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/otp-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5295
+          "Host": "axlm-otp-api",
+          "Port": 5010
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/otp-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/student-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5062
+          "Host": "axlm-student-api",
+          "Port": 5011
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/student-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/training-program-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5247
+          "Host": "axlm-trainingprogram-api",
+          "Port": 5012
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/training-program-management/{everything}",
-      "UpstreamHttpMethod": ["POST", "PUT", "GET", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamPathTemplate": "/api/user-management/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5174
+          "Host": "axlm-user-api",
+          "Port": 5013
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/user-management/{everything}",
-      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     }
   ]
 }

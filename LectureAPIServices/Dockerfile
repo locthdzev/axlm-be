@@ -1,33 +1,23 @@
-# Bước 1: Sử dụng .NET SDK để build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
-# Đặt thư mục làm việc trong Docker container
-WORKDIR /source
-
-# Copy toàn bộ file .csproj của các project vào Docker container
-COPY ./Repositories/Repositories.csproj ./Repositories/
-COPY ./Data/Data.csproj ./Data/
-COPY ./LectureAPIServices/LectureAPIServices.csproj ./LectureAPIServices/
-
-# Restore các dependencies cho các project
-RUN dotnet restore ./LectureAPIServices/LectureAPIServices.csproj
-
-# Copy toàn bộ source code vào Docker container
-COPY ./Repositories/ ./Repositories/
-COPY ./Data/ ./Data/
-COPY ./LectureAPIServices/ ./LectureAPIServices/
-
-# Copy file ServiceAccountKey vào Docker container
-COPY ./Data/axlm-2024-firebase.json ./Data/axlm-2024-firebase.json
-
-# Build project API_Customer
-RUN dotnet build ./LectureAPIServices/LectureAPIServices.csproj -c Release -o /app/build
-
-# Bước 2: Sử dụng .NET runtime để chạy ứng dụng
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# Use the official ASP.NET Core runtime as a parent image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-COPY --from=build /app/build .
-COPY --from=build /source/Data/axlm-2024-firebase.json ./Data/axlm-2024-firebase.json 
+EXPOSE 80
 
-# Chạy ứng dụng khi container khởi động
+# Use the SDK image for building
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["LectureAPIServices/LectureAPIServices.csproj", "LectureAPIServices/"]
+COPY ["Data/Data.csproj", "Data/"]
+COPY ["Repositories/Repositories.csproj", "Repositories/"]
+RUN dotnet restore "LectureAPIServices/LectureAPIServices.csproj"
+COPY . .
+WORKDIR "/src/LectureAPIServices"
+RUN dotnet build -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "LectureAPIServices.dll"]

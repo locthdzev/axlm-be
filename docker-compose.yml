@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  axlm-assignment-api:
+    build:
+      context: .
+      dockerfile: AssignmentAPIServices/Dockerfile
+    ports:
+      - "5001:80"
+    networks:
+      - backend
+
+  axlm-attendance-api:
+    build:
+      context: .
+      dockerfile: AttendanceAPIServices/Dockerfile
+    ports:
+      - "5002:80"
+    networks:
+      - backend
+
+  axlm-auth-api:
+    build:
+      context: .
+      dockerfile: AuthAPIServices/Dockerfile
+    ports:
+      - "5003:80"
+    networks:
+      - backend
+
+  axlm-certificate-api:
+    build:
+      context: .
+      dockerfile: CertificateAPIServices/Dockerfile
+    ports:
+      - "5004:80"
+    networks:
+      - backend
+
+  axlm-class-api:
+    build:
+      context: .
+      dockerfile: ClassAPIServices/Dockerfile
+    ports:
+      - "5005:80"
+    networks:
+      - backend
+
+  axlm-email-api:
+    build:
+      context: .
+      dockerfile: EmailAPIServices/Dockerfile
+    ports:
+      - "5006:80"
+    networks:
+      - backend
+
+  axlm-lecture-api:
+    build:
+      context: .
+      dockerfile: LectureAPIServices/Dockerfile
+    ports:
+      - "5007:80"
+    networks:
+      - backend
+
+  axlm-module-api:
+    build:
+      context: .
+      dockerfile: ModuleAPIServices/Dockerfile
+    ports:
+      - "5008:80"
+    networks:
+      - backend
+
+  axlm-notification-api:
+    build:
+      context: .
+      dockerfile: NotificationAPIServices/Dockerfile
+    ports:
+      - "5009:80"
+    networks:
+      - backend
+
+  axlm-otp-api:
+    build:
+      context: .
+      dockerfile: OtpAPIServices/Dockerfile
+    ports:
+      - "5010:80"
+    networks:
+      - backend
+
+  axlm-student-api:
+    build:
+      context: .
+      dockerfile: StudentAPIServices/Dockerfile
+    ports:
+      - "5011:80"
+    networks:
+      - backend
+
+  axlm-trainingprogram-api:
+    build:
+      context: .
+      dockerfile: TrainingProgramAPIServices/Dockerfile
+    ports:
+      - "5012:80"
+    networks:
+      - backend
+
+  axlm-user-api:
+    build:
+      context: .
+      dockerfile: UserAPIServices/Dockerfile
+    ports:
+      - "5013:80"
+    networks:
+      - backend
+
+#######################################
+
+  apigateway:
+    build:
+      context: .
+      dockerfile: APIGateway/Dockerfile
+    ports:
+      - "5000:80"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

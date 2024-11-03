@@ -18,12 +18,8 @@ using Repositories.TrainingProgramRepositories;
 using Repositories.UserRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddJsonFile("appsettings.certificate.json", optional: false, reloadOnChange: true);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-
-// builder.WebHost.ConfigureKestrel(serverOptions =>
-// {
-//     serverOptions.ListenAnyIP(80); // Lắng nghe tất cả địa chỉ IP
-// });
 
 // Add services to the container.
 builder.Services.AddControllers();

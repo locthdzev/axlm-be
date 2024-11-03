@@ -278,7 +278,7 @@ namespace TrainingProgramAPIServices.Services
                 AuthorResModel.FullName = Author.FullName;
                 AuthorResModel UpdateAuthorResModel = new();
                 ResProgramTraining.CreatedBy = AuthorResModel;
-                ResProgramTraining.UpdatedBy = null;
+                ResProgramTraining.UpdatedBy = AuthorResModel;
                 ResProgramTraining.TotalClass = AmountOfClass.Count;
                 ResProgramTraining.ClassList = await _classRepository.GetClassesByTrainingProgramId(Id);
                 if (ProgramTraining.UpdatedBy != null)

@@ -6,12 +6,10 @@ EXPOSE 80
 # Use the SDK image for building
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["ClassAPIServices/ClassAPIServices.csproj", "ClassAPIServices/"]
-COPY ["Data/Data.csproj", "Data/"]
-COPY ["Repositories/Repositories.csproj", "Repositories/"]
-RUN dotnet restore "ClassAPIServices/ClassAPIServices.csproj"
+COPY ["APIGateway/APIGateway.csproj", "APIGateway/"]
+RUN dotnet restore "APIGateway/APIGateway.csproj"
 COPY . .
-WORKDIR "/src/ClassAPIServices"
+WORKDIR "/src/APIGateway"
 RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish
@@ -20,4 +18,4 @@ RUN dotnet publish -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ClassAPIServices.dll"]
+ENTRYPOINT ["dotnet", "APIGateway.dll"]
