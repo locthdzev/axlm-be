@@ -1,23 +1,30 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-
+# Bước 1: Sử dụng .NET SDK để build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["AuthAPIServices/AuthAPIServices.csproj", "AuthAPIServices/"]
-COPY ["Data/Data.csproj", "Data/"]
-COPY ["Repositories/Repositories.csproj", "Repositories/"]
-RUN dotnet restore "AuthAPIServices/AuthAPIServices.csproj"
-COPY . .
-WORKDIR "/src/AuthAPIServices"
-RUN dotnet build "AuthAPIServices.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "AuthAPIServices.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Đặt thư mục làm việc trong Docker container
+WORKDIR /source
+EXPOSE 8080
 
-FROM base AS final
+# Copy toàn bộ file .csproj của các project vào Docker container
+COPY ./Repositories/Repositories.csproj ./Repositories/
+COPY ./Data/Data.csproj ./Data/
+COPY ./AuthAPIServices/AuthAPIServices.csproj ./AuthAPIServices/
+
+# Restore các dependencies cho các project
+RUN dotnet restore ./AuthAPIServices/AuthAPIServices.csproj
+
+# Copy toàn bộ source code vào Docker container
+COPY ./Repositories/ ./Repositories/
+COPY ./Data/ ./Data/
+COPY ./AuthAPIServices/ ./AuthAPIServices/
+
+# Build project API_Customer
+RUN dotnet build ./AuthAPIServices/AuthAPIServices.csproj -c Release -o /app/build
+
+# Bước 2: Sử dụng .NET runtime để chạy ứng dụng
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/build .
+
+# Chạy ứng dụng khi container khởi động
 ENTRYPOINT ["dotnet", "AuthAPIServices.dll"]

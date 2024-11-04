@@ -6,20 +6,17 @@ WORKDIR /source
 EXPOSE 8080
 
 # Copy toàn bộ file .csproj của các project vào Docker container
-COPY ./Repositories/Repositories.csproj ./Repositories/
-COPY ./Data/Data.csproj ./Data/
-COPY ./OtpAPIServices/OtpAPIServices.csproj ./OtpAPIServices/
+COPY ./APIGateway/APIGateway.csproj ./APIGateway/
 
 # Restore các dependencies cho các project
-RUN dotnet restore ./OtpAPIServices/OtpAPIServices.csproj
+RUN dotnet restore ./APIGateway/APIGateway.csproj
 
 # Copy toàn bộ source code vào Docker container
-COPY ./Repositories/ ./Repositories/
-COPY ./Data/ ./Data/
-COPY ./OtpAPIServices/ ./OtpAPIServices/
+COPY ./APIGateway/ ./APIGateway/
+
 
 # Build project API_Customer
-RUN dotnet build ./OtpAPIServices/OtpAPIServices.csproj -c Release -o /app/build
+RUN dotnet build ./APIGateway/APIGateway.csproj -c Release -o /app/build
 
 # Bước 2: Sử dụng .NET runtime để chạy ứng dụng
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
@@ -27,4 +24,4 @@ WORKDIR /app
 COPY --from=build /app/build .
 
 # Chạy ứng dụng khi container khởi động
-ENTRYPOINT ["dotnet", "OtpAPIServices.dll"]
+ENTRYPOINT ["dotnet", "APIGateway.dll"]

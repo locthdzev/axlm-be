@@ -3,6 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Đặt thư mục làm việc trong Docker container
 WORKDIR /source
+EXPOSE 8080
 
 # Copy toàn bộ file .csproj của các project vào Docker container
 COPY ./Repositories/Repositories.csproj ./Repositories/
@@ -16,6 +17,12 @@ RUN dotnet restore ./UserAPIServices/UserAPIServices.csproj
 COPY ./Repositories/ ./Repositories/
 COPY ./Data/ ./Data/
 COPY ./UserAPIServices/ ./UserAPIServices/
+
+# Copy toàn bộ thư mục TemplateEmail vào Docker container
+COPY ./Data/Utilities/TemplateEmail/ /Data/Utilities/TemplateEmail/
+# Copy toàn bộ thư mục Utilities vào Docker container
+COPY ./Data/Utilities/ /Data/Utilities/
+
 
 # Build project API_Customer
 RUN dotnet build ./UserAPIServices/UserAPIServices.csproj -c Release -o /app/build

@@ -3,6 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Đặt thư mục làm việc trong Docker container
 WORKDIR /source
+EXPOSE 8080
 
 # Copy toàn bộ file .csproj của các project vào Docker container
 COPY ./Repositories/Repositories.csproj ./Repositories/

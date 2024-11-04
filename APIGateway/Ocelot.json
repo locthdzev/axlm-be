@@ -5,8 +5,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5099
+          "Host": "160.30.44.65",
+          "Port": 9000
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/auth/{everything}",
@@ -17,8 +17,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5059
+          "Host": "160.30.44.65",
+          "Port": 9002
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/assignment-management/{everything}",
@@ -29,8 +29,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5101
+          "Host": "160.30.44.65",
+          "Port": 9003
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/attendance-management/{everything}",
@@ -41,8 +41,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5177
+          "Host": "160.30.44.65",
+          "Port": 9004
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/certificate-management/{everything}",
@@ -53,8 +53,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5020
+          "Host": "160.30.44.65",
+          "Port": 9005
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/class-management/{everything}",
@@ -65,8 +65,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "160.30.44.65",
+          "Port": 9006
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/email-management/{everything}",
@@ -77,8 +77,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5211
+          "Host": "160.30.44.65",
+          "Port": 9007
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/lecture-management/{everything}",
@@ -89,8 +89,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5246
+          "Host": "160.30.44.65",
+          "Port": 9008
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/module-management/{everything}",
@@ -101,8 +101,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5016
+          "Host": "160.30.44.65",
+          "Port": 9009
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/notification-management/{everything}",
@@ -113,8 +113,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5295
+          "Host": "160.30.44.65",
+          "Port": 9010
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/otp-management/{everything}",
@@ -125,8 +125,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5062
+          "Host": "160.30.44.65",
+          "Port": 9011
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/student-management/{everything}",
@@ -137,8 +137,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5247
+          "Host": "160.30.44.65",
+          "Port": 9012
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/training-program-management/{everything}",
@@ -149,8 +149,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5174
+          "Host": "160.30.44.65",
+          "Port": 9001
         }
       ],
       "UpstreamPathTemplate": "/APIGateway/user-management/{everything}",

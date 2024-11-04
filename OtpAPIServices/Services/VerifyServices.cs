@@ -50,19 +50,32 @@ namespace OtpAPIServices.Services
                         return Result;
                     }
                 }
+
                 string OTPCode = CreateOTPCode();
-                string FilePath = "../Data/Utilities/TemplateEmail/ResetPassword.html";
-                string Html = File.ReadAllText(FilePath);
-                Html = Html.Replace("{{OTPCode}}", OTPCode);
-                Html = Html.Replace("{{toEmail}}", Email);
-                bool check = await _email.SendEmail(Email, "Reset Password", Html);
-                if (!check)
+
+                // Địa chỉ URL của file HTML trong Firebase Storage
+                string url = "https://firebasestorage.googleapis.com/v0/b/axlm-2024.appspot.com/o/Data%2FUtilities%2FTemplateEmail%2FResetPassword.html?alt=media&token=58106c25-63b1-4403-94bf-6ec2b97a8468";
+
+                // Tải nội dung file từ Firebase Storage
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    Result.IsSuccess = false;
-                    Result.Code = 400;
-                    Result.Message = "Send email is failed!";
-                    return Result;
+                    string Html = await httpClient.GetStringAsync(url);
+
+                    // Thay thế các biến trong HTML
+                    Html = Html.Replace("{{OTPCode}}", OTPCode);
+                    Html = Html.Replace("{{toEmail}}", Email);
+
+                    // Gửi email
+                    bool check = await _email.SendEmail(Email, "Reset Password", Html);
+                    if (!check)
+                    {
+                        Result.IsSuccess = false;
+                        Result.Code = 400;
+                        Result.Message = "Send email is failed!";
+                        return Result;
+                    }
                 }
+
                 OtpVerify Otp = new()
                 {
                     Id = Guid.NewGuid(),
@@ -72,7 +85,7 @@ namespace OtpAPIServices.Services
                     ExpiredAt = DateTime.Now.AddMinutes(10),
                     IsUsed = false
                 };
-                  await _otpRepository.Insert(Otp);
+                await _otpRepository.Insert(Otp);
                 Result.IsSuccess = true;
                 Result.Code = 200;
                 Result.Message = "The OTP code has been sent to your email";

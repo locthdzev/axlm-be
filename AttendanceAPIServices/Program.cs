@@ -100,7 +100,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Attendance API Service V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API Service V1");
     c.RoutePrefix = string.Empty;
 });
 

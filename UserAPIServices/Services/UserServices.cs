@@ -47,7 +47,7 @@ namespace UserAPIServices.Services
                 {
                     var config = new MapperConfiguration(cfg =>
                     {
-                        cfg.CreateMap<UserCreateReqModel, User>().ForMember(dest => dest.Password, opt => opt.Ignore()); ;
+                        cfg.CreateMap<UserCreateReqModel, User>().ForMember(dest => dest.Password, opt => opt.Ignore());
                     });
                     IMapper mapper = config.CreateMapper();
                     User NewUser = mapper.Map<UserCreateReqModel, User>(CreateForm);
@@ -55,20 +55,33 @@ namespace UserAPIServices.Services
                     {
                         CreateForm.Password = Encoder.GenerateRandomPassword();
                     }
-                    // string FilePath = "../Business/TemplateEmail/FirstInformation.html";
-                    string FilePath = "../Data/Utilities/TemplateEmail/FirstInformation.html";
-                    string Html = File.ReadAllText(FilePath);
-                    Html = Html.Replace("{{Password}}", CreateForm.Password);
-                    Html = Html.Replace("{{Email}}", CreateForm.Email);
-                    bool check = await _email.SendEmail(CreateForm.Email, "Login Information", Html);
-                    var HashedPasswordModel = Encoder.CreateHashPassword(CreateForm.Password);
-                    NewUser.Password = HashedPasswordModel.HashedPassword;
-                    NewUser.Salt = HashedPasswordModel.Salt;
-                    NewUser.Status = UserStatus.ACTIVE;
-                     await _userRepository.Insert(NewUser);
-                    Result.IsSuccess = true;
-                    Result.Code = 200;
-                    Result.Message = "Create account successfully!";
+
+                    // Địa chỉ URL của file HTML trong Firebase Storage
+                    string url = "https://firebasestorage.googleapis.com/v0/b/axlm-2024.appspot.com/o/Data%2FUtilities%2FTemplateEmail%2FFirstInformation.html?alt=media&token=741d9a4d-75b8-4076-a790-899d106bf45f";
+
+                    // Tải nội dung file từ Firebase Storage
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        string Html = await httpClient.GetStringAsync(url);
+
+                        // Thay thế các biến trong HTML
+                        Html = Html.Replace("{{Password}}", CreateForm.Password);
+                        Html = Html.Replace("{{Email}}", CreateForm.Email);
+
+                        // Gửi email
+                        bool check = await _email.SendEmail(CreateForm.Email, "Login Information", Html);
+
+                        // Lưu người dùng mới vào cơ sở dữ liệu
+                        var HashedPasswordModel = Encoder.CreateHashPassword(CreateForm.Password);
+                        NewUser.Password = HashedPasswordModel.HashedPassword;
+                        NewUser.Salt = HashedPasswordModel.Salt;
+                        NewUser.Status = UserStatus.ACTIVE;
+                        await _userRepository.Insert(NewUser);
+
+                        Result.IsSuccess = true;
+                        Result.Code = 200;
+                        Result.Message = "Create account successfully!";
+                    }
                 }
             }
             catch (Exception e)
@@ -79,6 +92,7 @@ namespace UserAPIServices.Services
             }
             return Result;
         }
+
 
         public async Task<ResultModel> GetUserProfile(Guid userId)
         {
