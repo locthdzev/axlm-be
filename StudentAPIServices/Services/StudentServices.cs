@@ -96,45 +96,70 @@ namespace StudentAPIServices.Services
             ResultModel Result = new();
             try
             {
+                // Kiểm tra xem email đã tồn tại hay chưa
                 var Student = await _studentRepository.GetStudentByEmail(CreateStudent.Email);
                 if (Student != null)
                 {
                     Result.IsSuccess = false;
                     Result.Code = 400;
                     Result.Message = $"Email {CreateStudent.Email} is existed!";
-                }
-                else
-                {
-                    var config = new MapperConfiguration(cfg =>
-                    {
-                        cfg.CreateMap<StudentCreateReqModel, User>().ForMember(dest => dest.Password, opt => opt.Ignore()); ;
-                    });
-                    IMapper mapper = config.CreateMapper();
-                    User NewStudent = mapper.Map<StudentCreateReqModel, User>(CreateStudent);
-                    if (CreateStudent.Password == null)
-                    {
-                        CreateStudent.Password = Encoder.GenerateRandomPassword();
-                    }
-                    string FilePath = "../Data/Utilities/TemplateEmail/FirstInformation.html";
-                    string Html = File.ReadAllText(FilePath);
-                    Html = Html.Replace("{{Password}}", CreateStudent.Password);
-                    Html = Html.Replace("{{Email}}", CreateStudent.Email);
-                    bool check = await _email.SendEmail(CreateStudent.Email, "Login Information", Html);
-                    var HashedPasswordModel = Encoder.CreateHashPassword(CreateStudent.Password);
-                    NewStudent.Password = HashedPasswordModel.HashedPassword;
-                    NewStudent.Salt = HashedPasswordModel.Salt;
-                    NewStudent.Role = Roles.STUDENT;
-                    NewStudent.Status = UserStatus.ACTIVE;
-                    await _studentRepository.Insert(NewStudent);
-                    Result.IsSuccess = true;
-                    Result.Code = 200;
-                    Result.Message = "Create student successfully!";
+                    return Result; // Trả về kết quả nếu email đã tồn tại
                 }
 
+                // Cấu hình ánh xạ giữa StudentCreateReqModel và User
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<StudentCreateReqModel, User>().ForMember(dest => dest.Password, opt => opt.Ignore());
+                });
+                IMapper mapper = config.CreateMapper();
+                User NewStudent = mapper.Map<StudentCreateReqModel, User>(CreateStudent);
+
+                // Tạo mật khẩu ngẫu nhiên nếu không có
+                if (CreateStudent.Password == null)
+                {
+                    CreateStudent.Password = Encoder.GenerateRandomPassword();
+                }
+
+                // Lấy nội dung tệp HTML từ Firebase Storage
+                string url = "https://firebasestorage.googleapis.com/v0/b/axlm-2024.appspot.com/o/Data%2FUtilities%2FTemplateEmail%2FFirstInformation.html?alt=media&token=YOUR_TOKEN_HERE";
+                string Html;
+
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    // Tải nội dung HTML từ Firebase Storage
+                    Html = await httpClient.GetStringAsync(url);
+                }
+
+                // Thay thế các biến trong HTML
+                Html = Html.Replace("{{Password}}", CreateStudent.Password);
+                Html = Html.Replace("{{Email}}", CreateStudent.Email);
+
+                // Gửi email
+                bool check = await _email.SendEmail(CreateStudent.Email, "Login Information", Html);
+                if (!check)
+                {
+                    Result.IsSuccess = false;
+                    Result.Code = 400;
+                    Result.Message = "Failed to send email with login information!";
+                    return Result;
+                }
+
+                // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+                var HashedPasswordModel = Encoder.CreateHashPassword(CreateStudent.Password);
+                NewStudent.Password = HashedPasswordModel.HashedPassword;
+                NewStudent.Salt = HashedPasswordModel.Salt;
+                NewStudent.Role = Roles.STUDENT;
+                NewStudent.Status = UserStatus.ACTIVE;
+
+                // Lưu sinh viên mới vào cơ sở dữ liệu
+                await _studentRepository.Insert(NewStudent);
+                Result.IsSuccess = true;
+                Result.Code = 200;
+                Result.Message = "Create student successfully!";
             }
             catch (Exception e)
             {
-                // Log the exception message and stack trace for debugging purposes
+                // Ghi log thông tin chi tiết cho mục đích gỡ lỗi
                 Console.WriteLine($"Exception occurred: {e.Message}");
                 Console.WriteLine($"StackTrace: {e.StackTrace}");
 
@@ -145,11 +170,13 @@ namespace StudentAPIServices.Services
             return Result;
         }
 
+
         public async Task<ResultModel> CreateStudentList(List<StudentCreateReqModel> CreateStudentList)
         {
             ResultModel Result = new();
             try
             {
+                // Kiểm tra trùng lặp email trong danh sách sinh viên
                 HashSet<string> emailListCheck = new HashSet<string>();
                 foreach (var student in CreateStudentList)
                 {
@@ -159,75 +186,89 @@ namespace StudentAPIServices.Services
                         {
                             Code = 400,
                             IsSuccess = false,
-                            Message = $"The email '{student.Email}' of student '{student.FullName}' is duplicated. Please change the email before import again"
+                            Message = $"The email '{student.Email}' of student '{student.FullName}' is duplicated. Please change the email before import again."
                         };
                     }
-                    else
-                    {
-                        emailListCheck.Add(student.Email);
-                    }
+                    emailListCheck.Add(student.Email);
                 }
 
-                var newStudentList = new List<User>();
-                var emailList = new List<string>();
-                foreach (var createStudent in CreateStudentList)
-                {
-                    emailList.Add(createStudent.Email);
-                }
+                var emailList = CreateStudentList.Select(s => s.Email).ToList();
 
+                // Lấy danh sách sinh viên đã tồn tại trong cơ sở dữ liệu
                 var userList = await _studentRepository.GetStudentListByEmail(emailList);
-                if (userList.Count > 0)
+                if (userList.Any())
                 {
-                    var existedEmail = new List<string>();
-                    foreach (var user in userList)
-                    {
-                        existedEmail.Add(user.Email);
-                    }
+                    var existedEmail = userList.Select(u => u.Email).ToList();
                     return new ResultModel
                     {
                         Code = 400,
                         IsSuccess = false,
-                        Message = $"The email {string.Join(", ", existedEmail)} is existed"
+                        Message = $"The email {string.Join(", ", existedEmail)} already exists."
                     };
                 }
 
+                var newStudentList = new List<User>();
                 var emailReqList = new List<EmailSendingModel>();
+                string url = "https://firebasestorage.googleapis.com/v0/b/axlm-2024.appspot.com/o/Data%2FUtilities%2FTemplateEmail%2FFirstInformation.html?alt=media&token=YOUR_TOKEN_HERE";
+
+                // Tạo danh sách sinh viên mới
                 foreach (var createStudent in CreateStudentList)
                 {
                     var config = new MapperConfiguration(cfg =>
                     {
-                        cfg.CreateMap<StudentCreateReqModel, User>().ForMember(dest => dest.Password, opt => opt.Ignore()); ;
+                        cfg.CreateMap<StudentCreateReqModel, User>()
+                           .ForMember(dest => dest.Password, opt => opt.Ignore());
                     });
                     IMapper mapper = config.CreateMapper();
                     User NewStudent = mapper.Map<StudentCreateReqModel, User>(createStudent);
+
                     if (createStudent.Password == null)
                     {
                         createStudent.Password = Encoder.GenerateRandomPassword();
                     }
-                    string FilePath = "../Data/Utilities/TemplateEmail/FirstInformation.html";
-                    string Html = File.ReadAllText(FilePath);
-                    Html = Html.Replace("{{Password}}", createStudent.Password);
-                    Html = Html.Replace("{{Email}}", createStudent.Email);
+
+                    // Tải nội dung tệp HTML từ Firebase Storage
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        string Html = await httpClient.GetStringAsync(url);
+                        Html = Html.Replace("{{Password}}", createStudent.Password);
+                        Html = Html.Replace("{{Email}}", createStudent.Email);
+
+                        // Lưu thông tin email để gửi
+                        emailReqList.Add(new EmailSendingModel
+                        {
+                            email = createStudent.Email,
+                            html = Html,
+                        });
+                    }
+
+                    // Mã hóa mật khẩu và thêm sinh viên mới vào danh sách
                     var HashedPasswordModel = Encoder.CreateHashPassword(createStudent.Password);
                     NewStudent.Password = HashedPasswordModel.HashedPassword;
                     NewStudent.Salt = HashedPasswordModel.Salt;
                     NewStudent.Role = Roles.STUDENT;
                     NewStudent.Status = UserStatus.ACTIVE;
                     newStudentList.Add(NewStudent);
-                    emailReqList.Add(new EmailSendingModel
-                    {
-                        email = createStudent.Email,
-                        html = Html,
-                    });
                 }
 
-                bool check = await _email.SendListEmail("Login Information", emailReqList);
+                // Gửi email cho danh sách sinh viên mới
+                bool emailSent = await _email.SendListEmail("Login Information", emailReqList);
+                if (!emailSent)
+                {
+                    return new ResultModel
+                    {
+                        Code = 400,
+                        IsSuccess = false,
+                        Message = "Failed to send emails to the new students."
+                    };
+                }
+
+                // Lưu danh sách sinh viên mới vào cơ sở dữ liệu
                 await _studentRepository.AddRange(newStudentList);
 
                 Result.IsSuccess = true;
                 Result.Code = 200;
                 Result.Message = "New student list added successfully!";
-
             }
             catch (Exception e)
             {
@@ -237,6 +278,7 @@ namespace StudentAPIServices.Services
             }
             return Result;
         }
+
 
         public async Task<ResultModel> UpdateStudent(StudentUpdateResModel? studentUpdateRequest, Guid studentId)
         {

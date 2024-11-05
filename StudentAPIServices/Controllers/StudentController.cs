@@ -53,12 +53,16 @@ namespace StudentAPIServices.Controllers
                     using (var workbook = new XLWorkbook(stream))
                     {
                         var worksheet = workbook.Worksheet(1);
-
                         var rows = worksheet.RowsUsed().Skip(1);
+
                         foreach (var row in rows)
                         {
                             DateTime dob;
-                            if (DateTime.TryParseExact(row.Cell(3).Value.ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out dob))
+                            var cellValue = row.Cell(3).GetFormattedString(); // Sử dụng GetFormattedString để lấy giá trị dưới dạng chuỗi
+                            Console.WriteLine($"Processing date: {cellValue}");
+
+                            var dateFormats = new[] { "M/d/yyyy h:mm:ss tt", "M/d/yyyy", "MM/dd/yyyy", "dd/MM/yyyy", "yyyy-MM-dd", "m/d/yyyy h:mm:ss" };
+                            if (DateTime.TryParseExact(cellValue, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dob))
                             {
                                 var student = new StudentCreateReqModel
                                 {
@@ -73,7 +77,7 @@ namespace StudentAPIServices.Controllers
                             }
                             else
                             {
-                                throw new Exception($"Wrong date format {row.Cell(3).Value.ToString()}. Please input the date follow format: M/d/yyyy");
+                                throw new Exception($"Wrong date format {cellValue}. Please input the date following format: M/d/yyyy");
                             }
                         }
 
@@ -84,9 +88,12 @@ namespace StudentAPIServices.Controllers
             }
             catch (Exception ex)
             {
+                // Ghi log thông tin chi tiết
+                Console.WriteLine($"Error processing row: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
             }
         }
+
 
         [Authorize(Roles = "SUAdmin, Admin")]
         [HttpPost("students/student")]

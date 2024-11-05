@@ -24,6 +24,10 @@ RUN dotnet build ./StudentAPIServices/StudentAPIServices.csproj -c Release -o /a
 # Bước 2: Sử dụng .NET runtime để chạy ứng dụng
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
+
+# Thiết lập múi giờ
+RUN ln -snf /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime && echo 'Asia/Ho_Chi_Minh' > /etc/timezone
+
 COPY --from=build /app/build .
 
 # Chạy ứng dụng khi container khởi động
