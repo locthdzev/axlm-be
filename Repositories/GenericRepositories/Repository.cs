@@ -1,5 +1,8 @@
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Repositories.GenericRepositories
 {
@@ -21,38 +24,51 @@ namespace Repositories.GenericRepositories
 
         public async Task Insert(T entity)
         {
-            _ = await _entities.AddAsync(entity);
-            _ = await context.SaveChangesAsync();
+            await _entities.AddAsync(entity);
+            await SaveChangesAsync();
         }
 
         public async Task Remove(T entity)
         {
-            _ = _entities.Remove(entity);
-            _ = await context.SaveChangesAsync();
+            _entities.Remove(entity);
+            await SaveChangesAsync();
         }
 
         public async Task Update(T entity)
         {
-            _ = _entities.Update(entity);
-            _ = await context.SaveChangesAsync();
+            _entities.Update(entity);
+            await SaveChangesAsync();
         }
 
         public async Task AddRange(List<T> entities)
         {
             _entities.AddRange(entities);
-            await context.SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public async Task DeleteRange(List<T> entities)
         {
             _entities.RemoveRange(entities);
-            await context.SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public async Task UpdateRange(List<T> entities)
         {
             _entities.UpdateRange(entities);
-            await context.SaveChangesAsync();
+            await SaveChangesAsync();
+        }
+
+        // Phương thức riêng để gọi SaveChangesAsync, giúp tối ưu hóa và giảm số lần gọi.
+        private async Task SaveChangesAsync()
+        {
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("An error occurred while saving changes to the database.", ex);
+            }
         }
     }
 }

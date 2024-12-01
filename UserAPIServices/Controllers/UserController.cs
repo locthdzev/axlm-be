@@ -49,7 +49,7 @@ namespace UserAPIServices.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize(Roles = "SUAdmin, Admin")]
+        [Authorize(Roles = "SUAdmin, Admin, Trainer, Student")]
         [HttpGet("users/{id}")]
         public async Task<IActionResult> GetAccountsInfo(Guid id)
         {
