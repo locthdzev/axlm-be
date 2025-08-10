@@ -3,6 +3,7 @@ using Data.Entities;
 using Data.Models.AttendanceModel;
 using Data.Models.ResultModel;
 using Data.Utilities.Pagination;
+using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using Repositories.AttendanceRepositories;
 using Repositories.AttendDetaillsRepositories;
@@ -182,39 +183,32 @@ namespace AttendanceAPIServices.Services
 
                 await _attendanceRepository.Insert(newAttendance);
 
-                string connectionString = _configuration.GetConnectionString("DefaultConnection");
-
-                if (connectionString == null)
-                {
-                    return new ResultModel
-                    {
-                        Code = 400,
-                        IsSuccess = false,
-                        Message = "The database connection is error"
-                    };
-                }
-
-                var attendanceId = newAttendance.Id;
-                var eventExpiredName = $"update_expired_attendance_{attendanceId}".Replace("-", "_");
-                var eventLateName = $"update_late_attendance_{attendanceId}".Replace("-", "_");
-                var expiredTime = newAttendance.DueTo;
-                var lateTime = newAttendance.LateTo;
-                var doneStatus = AttendanceStatus.DONE;
-                var lateStatus = AttendanceStatus.LATE;
-
-                using (var connection = new MySqlConnection(connectionString))
+                // SQL Server event scheduling
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     await connection.OpenAsync();
+
+                    var attendanceId = newAttendance.Id;
+                    var eventExpiredName = $"update_expired_attendance_{attendanceId}".Replace("-", "_");
+                    var eventLateName = $"update_late_attendance_{attendanceId}".Replace("-", "_");
+                    var expiredTime = newAttendance.DueTo;
+                    var lateTime = newAttendance.LateTo;
+                    var doneStatus = AttendanceStatus.DONE;
+                    var lateStatus = AttendanceStatus.LATE;
+
                     if (lateTime == expiredTime)
                     {
                         string createExpiredEventQuery = $@"
-                                                        CREATE EVENT IF NOT EXISTS {eventExpiredName}
-                                                        ON SCHEDULE AT '{expiredTime.ToString("yyyy-MM-dd HH:mm:ss")}'
-                                                        DO
-                                                           UPDATE FAMS.Attendance SET Attendance.Status = '{doneStatus}' WHERE Attendance.Id LIKE '{attendanceId}'
-                                                       ";
+                    CREATE EVENT {eventExpiredName}
+                    ON SCHEDULE AT '{expiredTime.ToString("yyyy-MM-dd HH:mm:ss")}'
+                    DO
+                    BEGIN
+                        UPDATE Attendance
+                        SET Status = '{doneStatus}'
+                        WHERE Id = '{attendanceId}';
+                    END;";
 
-                        using (var command = new MySqlCommand(createExpiredEventQuery, connection))
+                        using (var command = new SqlCommand(createExpiredEventQuery, connection))
                         {
                             await command.ExecuteNonQueryAsync();
                         }
@@ -222,30 +216,35 @@ namespace AttendanceAPIServices.Services
                     else if (lateTime > expiredTime)
                     {
                         string createExpiredEventQuery = $@"
-                                                        CREATE EVENT IF NOT EXISTS {eventExpiredName}
-                                                        ON SCHEDULE AT '{expiredTime.ToString("yyyy-MM-dd HH:mm:ss")}'
-                                                        DO
-                                                           UPDATE FAMS.Attendance SET Attendance.Status = '{lateStatus}' WHERE Attendance.Id LIKE '{attendanceId}'
-                                                       ";
+                    CREATE EVENT {eventExpiredName}
+                    ON SCHEDULE AT '{expiredTime.ToString("yyyy-MM-dd HH:mm:ss")}'
+                    DO
+                    BEGIN
+                        UPDATE Attendance
+                        SET Status = '{lateStatus}'
+                        WHERE Id = '{attendanceId}';
+                    END;";
 
-                        using (var command = new MySqlCommand(createExpiredEventQuery, connection))
+                        using (var command = new SqlCommand(createExpiredEventQuery, connection))
                         {
                             await command.ExecuteNonQueryAsync();
                         }
 
                         string createLateEventQuery = $@"
-                                                         CREATE EVENT IF NOT EXISTS {eventLateName}
-                                                         ON SCHEDULE AT '{lateTime.ToString("yyyy-MM-dd HH:mm:ss")}'
-                                                         DO
-                                                            UPDATE FAMS.Attendance SET Attendance.Status = '{doneStatus}' WHERE Attendance.Id LIKE '{attendanceId}'
-                                                        ";
+                    CREATE EVENT {eventLateName}
+                    ON SCHEDULE AT '{lateTime.ToString("yyyy-MM-dd HH:mm:ss")}'
+                    DO
+                    BEGIN
+                        UPDATE Attendance
+                        SET Status = '{doneStatus}'
+                        WHERE Id = '{attendanceId}';
+                    END;";
 
-                        using (var command = new MySqlCommand(createLateEventQuery, connection))
+                        using (var command = new SqlCommand(createLateEventQuery, connection))
                         {
                             await command.ExecuteNonQueryAsync();
                         }
                     }
-
                 }
 
                 resultModel.IsSuccess = true;
